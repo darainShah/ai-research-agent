@@ -16,7 +16,7 @@ jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
 MarkupSafe==3.0.3
 narwhals==2.25.0
-numpy==2.5.2
+numpy==1.26.4
 packaging==26.3
 pandas==3.0.5
 pillow==12.3.0
@@ -41,3 +41,9 @@ typing_extensions==4.16.0
 urllib3==2.7.0
 uvicorn==0.52.4
 websockets==16.1.1
+qdrant-client
+sentence-transformers==2.6.1
+
+torch==2.2.2
+
+ollama

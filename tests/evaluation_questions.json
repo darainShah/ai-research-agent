@@ -1,0 +1,44 @@
+[
+  {
+    "id": "aqi_01",
+    "document": "Dissertation.pdf",
+    "question": "What is AQI?",
+    "type": "answerable",
+    "expected_answerable": true
+  },
+  {
+    "id": "aqi_02",
+    "document": "Dissertation.pdf",
+    "question": "How is AQI calculated?",
+    "type": "answerable",
+    "expected_answerable": true
+  },
+  {
+    "id": "aqi_03",
+    "document": "Dissertation.pdf",
+    "question": "What pollutants are used in AQI calculation?",
+    "type": "answerable",
+    "expected_answerable": true
+  },
+  {
+    "id": "aqi_04",
+    "document": "Dissertation.pdf",
+    "question": "What is the capital of Japan?",
+    "type": "unanswerable",
+    "expected_answerable": false
+  },
+  {
+    "id": "embedding_01",
+    "document": "research_paper.pdf",
+    "question": "What is token embedding?",
+    "type": "answerable",
+    "expected_answerable": true
+  },
+  {
+    "id": "embedding_02",
+    "document": "research_paper.pdf",
+    "question": "What is AQI?",
+    "type": "unanswerable",
+    "expected_answerable": false
+  }
+]

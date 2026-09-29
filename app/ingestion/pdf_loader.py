@@ -1,5 +1,5 @@
 from pathlib import Path
-import fitz
+import pymupdf
 
 
 def load_pdf(file_path: str):
@@ -16,7 +16,7 @@ def load_pdf(file_path: str):
             "The provided file is not a PDF."
         )
 
-    document = fitz.open(pdf_path)
+    document = pymupdf.open(pdf_path)
 
     pages = []
 

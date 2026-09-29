@@ -1,0 +1,40 @@
+[
+    {
+        "question": "What is attention?",
+        "expected_keywords": [
+            "token",
+            "important"
+        ]
+    },
+    {
+        "question": "What are Q, K, and V?",
+        "expected_keywords": [
+            "WQ",
+            "WK",
+            "WV"
+        ]
+    },
+    {
+        "question": "What is self-attention?",
+        "expected_keywords": [
+            "same",
+            "input"
+        ]
+    },
+    {
+        "question": "What is the attention score?",
+        "expected_keywords": [
+            "Q",
+            "K"
+        ]
+    },
+    {
+        "question": "What is the formula for self-attention?",
+        "expected_keywords": [
+            "softmax",
+            "Q",
+            "K",
+            "V"
+        ]
+    }
+]

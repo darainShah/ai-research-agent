@@ -12,8 +12,8 @@ for page in pages:
 
     chunks = chunk_text(
         page["text"],
-        chunk_size=1000,
-        chunk_overlap=200
+        chunk_size=400,
+        chunk_overlap=80
     )
 
     for chunk in chunks:

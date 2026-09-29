@@ -1,0 +1,16 @@
+{
+    "retrieval": {
+        "dense_top_1": 0.75,
+        "reranked_top_1": 1.0,
+        "reranked_top_3": 1.0,
+        "evaluation_questions": 8
+    },
+    "citation": {
+        "accuracy": 1.0,
+        "evaluation_questions": 8
+    },
+    "unanswerable": {
+        "refusal_accuracy": 1.0,
+        "evaluation_questions": 4
+    }
+}
