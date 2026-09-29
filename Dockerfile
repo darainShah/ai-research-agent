@@ -7,6 +7,12 @@ ENV PYTHONUNBUFFERED=1
 
 COPY requirements.txt .
 
+# Install CPU-only PyTorch for deployment
+RUN pip install --no-cache-dir \
+    torch==2.5.1 \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# Install application dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app ./app
