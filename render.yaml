@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: ai-research-agent-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: OLLAMA_URL
+        sync: false
+
+  - type: web
+    name: ai-research-agent-ui
+    runtime: python
+    buildCommand: pip install -r requirements-ui.txt
+    startCommand: streamlit run app/ui/streamlit_app.py --server.address 0.0.0.0 --server.port $PORT
+    plan: free
+    envVars:
+      - key: API_URL
+        sync: false

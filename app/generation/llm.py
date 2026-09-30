@@ -3,8 +3,8 @@ import ollama
 
 
 class LLM:
-    def __init__(self, model: str = "qwen3:4b"):
-        self.model = model
+    def __init__(self, model: str | None = None):
+        self.model = model or os.getenv("OLLAMA_MODEL", "qwen3:4b")
         self.client = ollama.Client(
             host=os.getenv(
                 "OLLAMA_URL",
