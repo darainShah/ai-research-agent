@@ -6,7 +6,7 @@ services:
     dockerContext: .
     plan: free
     envVars:
-      - key: OLLAMA_URL
+      - key: GROQ_API_KEY
         sync: false
 
   - type: web
