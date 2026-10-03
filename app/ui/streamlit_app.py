@@ -3,7 +3,10 @@ import requests
 import streamlit as st
 
 
-API_URL = os.getenv("API_URL", "http://127.0.0.1:8000")
+API_URL = os.getenv(
+    "API_URL",
+    "https://ai-research-agent-api-yj2v.onrender.com"
+).rstrip("/")
 
 
 st.set_page_config(
