@@ -94,7 +94,7 @@ with st.sidebar:
                 upload_response = requests.post(
                     f"{API_URL}/documents/upload",
                     files=files,
-                    timeout=120
+                    timeout=300
                 )
 
                 if upload_response.status_code == 200:
@@ -140,17 +140,19 @@ with st.sidebar:
                     try:
                         detail = upload_response.json().get(
                             "detail",
-                            "Upload failed."
+                            `Upload failed (HTTP ${upload_response.status_code}).`
                         )
                     except Exception:
-                        detail = "Upload failed."
+                        detail = (
+                            `Upload failed (HTTP ${upload_response.status_code}). `
+                            + upload_response.text[:500]
+                        )
 
                     st.error(detail)
 
-            except requests.RequestException:
-
+            except requests.RequestException as exc:
                 st.error(
-                    "Could not connect to the FastAPI server."
+                    f"Could not connect to FastAPI server at {API_URL}. Error: {exc}"
                 )
 
     st.divider()
@@ -439,7 +441,7 @@ if question:
                         "chat_history": chat_history
                     },
 
-                    timeout=120
+                    timeout=300
                 )
 
 
