@@ -3,11 +3,19 @@ import requests
 import streamlit as st
 
 
+# ============================================================
+# API CONFIGURATION
+# ============================================================
+
 API_URL = os.getenv(
     "API_URL",
     "https://ai-research-agent-api-yj2v.onrender.com"
 ).rstrip("/")
 
+
+# ============================================================
+# PAGE CONFIGURATION
+# ============================================================
 
 st.set_page_config(
     page_title="AI Research Agent",
@@ -47,17 +55,20 @@ st.caption(
 # ============================================================
 
 try:
+
     response = requests.get(
         f"{API_URL}/documents/",
-        timeout=10
+        timeout=30
     )
 
     if response.status_code == 200:
         documents = response.json()
+
     else:
         documents = []
 
 except requests.RequestException:
+
     documents = []
 
 
@@ -91,11 +102,20 @@ with st.sidebar:
 
             try:
 
+                # ====================================================
+                # UPLOAD PDF TO FASTAPI
+                # ====================================================
+
                 upload_response = requests.post(
                     f"{API_URL}/documents/upload",
                     files=files,
                     timeout=300
                 )
+
+
+                # ====================================================
+                # SUCCESS
+                # ====================================================
 
                 if upload_response.status_code == 200:
 
@@ -129,31 +149,55 @@ with st.sidebar:
 
                     st.rerun()
 
+
+                # ====================================================
+                # DUPLICATE DOCUMENT
+                # ====================================================
+
                 elif upload_response.status_code == 409:
 
                     st.warning(
                         "This document has already been uploaded."
                     )
 
+
+                # ====================================================
+                # API ERROR
+                # ====================================================
+
                 else:
 
                     try:
+
                         detail = upload_response.json().get(
                             "detail",
-                            `Upload failed (HTTP ${upload_response.status_code}).`
+                            f"Upload failed "
+                            f"(HTTP {upload_response.status_code})."
                         )
+
                     except Exception:
+
                         detail = (
-                            `Upload failed (HTTP ${upload_response.status_code}). `
-                            + upload_response.text[:500]
+                            f"Upload failed "
+                            f"(HTTP {upload_response.status_code}). "
+                            f"{upload_response.text[:500]}"
                         )
 
                     st.error(detail)
 
+
+            # ========================================================
+            # CONNECTION ERROR
+            # ========================================================
+
             except requests.RequestException as exc:
+
                 st.error(
-                    f"Could not connect to FastAPI server at {API_URL}. Error: {exc}"
+                    f"Could not connect to FastAPI server "
+                    f"at {API_URL}. "
+                    f"Error: {exc}"
                 )
+
 
     st.divider()
 
@@ -250,6 +294,7 @@ with st.sidebar:
 
 
         document_id = st.session_state.selected_document_id
+
         selected_filename = st.session_state.selected_filename
 
 
@@ -258,9 +303,9 @@ with st.sidebar:
         )
 
 
-        # ----------------------------------------------------
-        # Delete document
-        # ----------------------------------------------------
+        # ====================================================
+        # DELETE DOCUMENT
+        # ====================================================
 
         st.divider()
 
@@ -276,6 +321,7 @@ with st.sidebar:
                     timeout=30
                 )
 
+
                 if delete_response.status_code == 200:
 
                     st.session_state.messages = []
@@ -290,23 +336,31 @@ with st.sidebar:
 
                     st.rerun()
 
+
                 else:
 
                     try:
+
                         detail = delete_response.json().get(
                             "detail",
                             "Unable to delete document."
                         )
+
                     except Exception:
+
                         detail = "Unable to delete document."
 
                     st.error(detail)
 
-            except requests.RequestException:
+
+            except requests.RequestException as exc:
 
                 st.error(
-                    "Could not connect to the API."
+                    f"Could not connect to the API "
+                    f"at {API_URL}. "
+                    f"Error: {exc}"
                 )
+
 
     else:
 
@@ -322,7 +376,7 @@ with st.sidebar:
 if not documents:
 
     st.info(
-        "👈 Upload a PDF from the sidebar."
+        "👈 Upload a PDF to get started."
     )
 
     st.stop()
@@ -348,6 +402,7 @@ for message in st.session_state.messages:
         st.markdown(
             message["content"]
         )
+
 
         if (
             message["role"] == "assistant"
@@ -420,9 +475,9 @@ if question:
     ]
 
 
-    # --------------------------------------------------------
-    # Ask FastAPI
-    # --------------------------------------------------------
+    # ========================================================
+    # ASK FASTAPI
+    # ========================================================
 
     with st.chat_message("assistant"):
 
@@ -445,9 +500,9 @@ if question:
                 )
 
 
-                # ------------------------------------------------
+                # =================================================
                 # SUCCESS
-                # ------------------------------------------------
+                # =================================================
 
                 if response.status_code == 200:
 
@@ -463,9 +518,9 @@ if question:
                     st.markdown(answer)
 
 
-                    # ------------------------------------------------
-                    # Sources
-                    # ------------------------------------------------
+                    # =================================================
+                    # SOURCES
+                    # =================================================
 
                     if sources:
 
@@ -498,9 +553,9 @@ if question:
                                 )
 
 
-                    # ------------------------------------------------
-                    # Citation validation
-                    # ------------------------------------------------
+                    # =================================================
+                    # CITATION VALIDATION
+                    # =================================================
 
                     if validation["all_valid"]:
 
@@ -515,9 +570,9 @@ if question:
                         )
 
 
-                    # ------------------------------------------------
-                    # Save assistant response
-                    # ------------------------------------------------
+                    # =================================================
+                    # SAVE ASSISTANT RESPONSE
+                    # =================================================
 
                     st.session_state.messages.append(
                         {
@@ -528,9 +583,9 @@ if question:
                     )
 
 
-                # ------------------------------------------------
+                # =================================================
                 # API ERROR
-                # ------------------------------------------------
+                # =================================================
 
                 else:
 
@@ -538,20 +593,29 @@ if question:
 
                         error_message = response.json().get(
                             "detail",
-                            "Unable to generate answer."
+                            f"Unable to generate answer "
+                            f"(HTTP {response.status_code})."
                         )
 
                     except Exception:
 
                         error_message = (
-                            "Unable to generate answer."
+                            f"Unable to generate answer "
+                            f"(HTTP {response.status_code}). "
+                            f"{response.text[:500]}"
                         )
 
                     st.error(error_message)
 
 
-            except requests.RequestException:
+            # =====================================================
+            # CONNECTION ERROR
+            # =====================================================
+
+            except requests.RequestException as exc:
 
                 st.error(
-                    "Could not connect to the FastAPI server."
+                    f"Could not connect to FastAPI server "
+                    f"at {API_URL}. "
+                    f"Error: {exc}"
                 )
