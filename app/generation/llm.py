@@ -1,3 +1,4 @@
+
 import os
 from groq import Groq
 
@@ -6,12 +7,15 @@ class LLM:
     def __init__(self, model: str = "openai/gpt-oss-20b"):
         self.model = model
         api_key = os.getenv("GROQ_API_KEY")
+
         if not api_key:
             raise ValueError("GROQ_API_KEY is not set")
+
         self.client = Groq(api_key=api_key)
 
-    def rewrite_question(self, question, history=None):
-        history = history or []
+    def rewrite_question(self, question, chat_history=None):
+        chat_history = chat_history or []
+
         messages = [{
             "role": "system",
             "content": (
@@ -19,15 +23,22 @@ class LLM:
                 "for document retrieval. Return only the rewritten question."
             ),
         }]
-        for message in history[-6:]:
+
+        for message in chat_history[-6:]:
             messages.append(message)
-        messages.append({"role": "user", "content": question})
+
+        messages.append({
+            "role": "user",
+            "content": question
+        })
+
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
             temperature=0,
             max_tokens=128,
         )
+
         return response.choices[0].message.content.strip()
 
     def generate(self, question, context, chat_history=None):
@@ -55,6 +66,7 @@ QUESTION:
 
 ANSWER:
 """
+
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -65,9 +77,14 @@ ANSWER:
                         "Use only the supplied document sources."
                     ),
                 },
-                {"role": "user", "content": prompt},
+                {
+                    "role": "user",
+                    "content": prompt
+                },
             ],
             temperature=0,
             max_tokens=512,
         )
+
         return response.choices[0].message.content.strip()
+
